@@ -8,33 +8,33 @@
 
 import Foundation
 class CalculatorBrain{
-    //创建一个枚举 抽象操作数与操作符
-    enum op{
+    //创建一个枚举 抽象操作数与操作符  枚举名、枚举值都首字母大写
+    enum Op{
         case Operand(Double)
         case Unaryoperation(String, Double -> Double)
         case Binaryoperation(String, (Double, Double) -> Double)
     }
     //创建一个op数组 为了controler的清空 不private
-   var opStack = [op]()
+   var opStack = [Op]()
     
-   private var opsdic = [String:op]()
+   private var opsdic = [String: Op]()
     
     init(){
         //初始化操作字典
-        opsdic["√"] = op.Unaryoperation("√", sqrt)
-        opsdic["+"] = op.Binaryoperation("+", +)
-        opsdic["−"] = op.Binaryoperation("−", {$0 - $1})
-        opsdic["×"] = op.Binaryoperation("×", *)
-        opsdic["÷"] = op.Binaryoperation("÷", {$0 / $1})
-        opsdic["sin"] = op.Unaryoperation("sin", sin)
-        opsdic["cos"] = op.Unaryoperation("cos", cos)
-        opsdic["π"] = op.Operand(M_PI)
+        opsdic["√"] = Op.Unaryoperation("√", sqrt)
+        opsdic["+"] = Op.Binaryoperation("+", +)
+        opsdic["−"] = Op.Binaryoperation("−", {$0 - $1})
+        opsdic["×"] = Op.Binaryoperation("×", *)
+        opsdic["÷"] = Op.Binaryoperation("÷", {$0 / $1})
+        opsdic["sin"] = Op.Unaryoperation("sin", sin)
+        opsdic["cos"] = Op.Unaryoperation("cos", cos)
+        opsdic["π"] = Op.Operand(M_PI)
         
     }
     
     //将操作数压入
     func pushOperand(operand: Double) -> (Double?, Double?, Double?){
-        opStack.append(op.Operand(operand))
+        opStack.append(Op.Operand(operand))
         return evaluate()
     }
     //将操作符压入
@@ -47,7 +47,7 @@ class CalculatorBrain{
         return (nil, nil, nil)
     }
     //输入一个op数组 返回结果与剩下的op数组
-    private  func evaluate(ops: [op]) ->(result: Double?, remainingOps: [op],op1: Double?,op2:Double?){
+    private  func evaluate(ops: [Op]) ->(result: Double?, remainingOps: [Op],op1: Double?,op2:Double?){
         if !ops.isEmpty{
             var myops = ops
             let op = myops.removeLast()
