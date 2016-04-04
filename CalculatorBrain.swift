@@ -9,15 +9,29 @@
 import Foundation
 class CalculatorBrain{
     //创建一个枚举 抽象操作数与操作符  枚举名、枚举值都首字母大写
-    enum Op{
+    //Swift的特性 可以把枚举中的枚举值与数据关联起来
+  enum Op: CustomStringConvertible
+    {
         case Operand(Double)
         case Unaryoperation(String, Double -> Double)
         case Binaryoperation(String, (Double, Double) -> Double)
+    var description: String{
+      get{
+        switch self {
+        case .Operand(let operand):
+          return "\(operand)"
+        case .Binaryoperation(let operation,_):
+          return operation
+        case .Unaryoperation(let operation,_):
+          return operation
+        }
+      }
+    }
     }
     //创建一个op数组 为了controler的清空 不private
    var opStack = [Op]()
     
-   private var opsdic = [String: Op]()
+   private var opsdic = [String:Op]()
     
     init(){
         //初始化操作字典
@@ -47,7 +61,7 @@ class CalculatorBrain{
         return (nil, nil, nil)
     }
     //输入一个op数组 返回结果与剩下的op数组
-    private  func evaluate(ops: [Op]) ->(result: Double?, remainingOps: [Op],op1: Double?,op2:Double?){
+    private  func evaluate(ops: [Op]) ->(result: Double?, remainingOps: [Op],op1: Double?,op2: Double?){
         if !ops.isEmpty{
             var myops = ops
             let op = myops.removeLast()
@@ -66,16 +80,19 @@ class CalculatorBrain{
                     if let num2 = evaluatetwo.result{
                         return (boperation(num2, num1),evaluatetwo.remainingOps, num2, num1)
                     }
+                    else{
+                      return (nil, evaluateone.remainingOps,nil,nil)
+                  }
                 }
             }
         }
-        return (nil, ops,nil, nil)
+        return (nil, [],nil, nil)
     }
     
     //重载
     func evaluate() -> (Double?, Double?, Double?){
         let (result, remainder ,op1, op2) = evaluate(opStack)
-        
+        print("opStack = \(opStack) result = \(result) remainder = \(remainder)")
         return (result, op1, op2)
     }
     
