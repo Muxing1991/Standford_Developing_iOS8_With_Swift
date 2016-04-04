@@ -197,8 +197,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VKk-Su-alj">
                                 <rect key="frame" x="28" y="499.5" width="102.5" height="92.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="34"/>
+                                <state key="normal" title="←"/>
                                 <connections>
-                                    <action selector="appendDigit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="PDQ-JR-oQe"/>
+                                    <action selector="deleteDigit" destination="BYZ-38-t0r" eventType="touchUpInside" id="IDC-j7-5xB"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Gp-ra-ff8">

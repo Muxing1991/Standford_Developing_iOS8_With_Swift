@@ -25,6 +25,18 @@ class ViewController: UIViewController {
     var brain = CalculatorBrain()
     
     
+    @IBAction func deleteDigit() {
+      //删除display中显示的数字
+      let displayDigit = display.text!
+        let rest = displayDigit.characters.dropLast()
+      if rest.count == 0 {
+        display.text = "0"
+        return
+      }
+        display.text = String(rest)
+      
+      
+    }
     @IBAction func operate(sender: UIButton) {
         let operation = sender.currentTitle!
         if isTyping{
@@ -103,10 +115,10 @@ class ViewController: UIViewController {
             if display.text!.rangeOfString(".") != nil {
                 return
             }
-            else {
-                digit = display.text! + "."
-            }
-            
+//            else {
+//                digit = display.text! + "."
+//            }
+          
             
         }
             
@@ -141,7 +153,7 @@ class ViewController: UIViewController {
         //digitStack.append(input)
         brain.pushOperand(input)
         //print("digitStack = \(digitStack)")
-        
+      
     }
     
     var displayValue: Double{
@@ -149,8 +161,9 @@ class ViewController: UIViewController {
             return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
         }
         set{
-            let result = String(format: "%.6f", newValue)
+            let result = String(format: "%.2f", newValue)
             display.text = result
+            
             isTyping = false
         }
     }
