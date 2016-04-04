@@ -9,6 +9,7 @@
 import Foundation
 class CalculatorBrain{
     //创建一个枚举 抽象操作数与操作符  枚举名、枚举值都首字母大写
+    //Swift的特性 可以把枚举中的枚举值与数据关联起来
     enum Op{
         case Operand(Double)
         case Unaryoperation(String, Double -> Double)
