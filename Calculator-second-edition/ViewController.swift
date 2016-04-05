@@ -9,164 +9,166 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+  
+  
+  @IBOutlet weak var display: UILabel!
+  
+  @IBOutlet weak var history: UILabel!
+  
+  var state = true
+  
+  var isTyping = false
+  
+  var brain = CalculatorBrain()
+  
+  
+  @IBAction func deleteDigit() {
     
-    @IBOutlet weak var display: UILabel!
+    //删除display中显示的数字
+    let displayDigit = display.text!
+    let rest = displayDigit.characters.dropLast()
+    if rest.count == 0 {
+      display.text = "0"
+      return
+    }
+    display.text = String(rest)
+    if !isTyping{
+      //如果不是打字中 也要enter
+      enter()
+    }
     
-    @IBOutlet weak var history: UILabel!
+  }
+  @IBAction func operate(sender: UIButton) {
+    let operation = sender.currentTitle!
+    if isTyping{
+      enter() //把现在显示在display的数字压入栈
+    }
+    let operationresult = brain.pushOperation(operation)
     
-    var isTyping = false
-    //类初始化的时候 isTyping为false
+    if let result = operationresult.0{
+      if let num1 = operationresult.1, let num2 = operationresult.2{
+        appendhistory("\(num1) "+operation+" \(num2) = \(result)")
+      }
+      else if let num1 = operationresult.1{
+        appendhistory(operation + "(\(num1)) = \(result)")
+      }
+      else {
+        appendhistory("\(result)")
+      }
+      displayValue = result
+    }
     
-    //声明一个栈来存数字
-    //var digitStack: Array<Double> = Array<Double>()
-    //var digitStack = Array<Double>()
+  }
+  
+  
+  @IBAction func clean() {
+    //恢复初始状态
+    display.text = "0"
+    history.text = "History"
+    brain.opStack = []
+  }
+  
+  func appendhistory(msg: String){
+    history.text = msg + " "
+  }
+  
+  @IBAction func appendDigit(sender: UIButton) {
     
-    var brain = CalculatorBrain()
+    let digit = sender.currentTitle!
     
-    
-    @IBAction func deleteDigit() {
-      //删除display中显示的数字
-      let displayDigit = display.text!
-        let rest = displayDigit.characters.dropLast()
-      if rest.count == 0 {
-        display.text = "0"
+    if digit == "." {
+      if display.text!.rangeOfString(".") != nil {
         return
       }
-        display.text = String(rest)
       
       
     }
-    @IBAction func operate(sender: UIButton) {
-        let operation = sender.currentTitle!
-        if isTyping{
-            enter() //把现在显示在display的数字压入栈
+    
+    
+    if isTyping {
+      display.text = display.text! + digit
+    }
+    else {
+      display.text = digit
+      
+      isTyping = true
+    }
+    
+  }
+  
+  @IBAction func enter() {
+    isTyping = false
+    //下一次是新的输入
+    if let value = displayValue{
+      if let  result = brain.pushOperand(value).0{
+        displayValue = result
+      }
+    }
+    
+    
+    
+    
+    
+    
+  }
+  func enter(input: Double){
+    isTyping = false
+    
+    brain.pushOperand(input)
+    
+    
+  }
+  
+  var displayValue: Double?{
+    get{
+      //如果显示的是nan not a number 会报错
+      
+      if display.text! == "nan" {
+        return nil
+      }
+      else {
+        return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
+      }
+    }
+    set{
+      if let value = newValue{
+        //去除多余的小数
+        if isFraction(newValue!){
+          display.text = String(format:"%.2f", value)
         }
-//        switch operation {
-//        case "+": operateDigit(operation){ $0 + $1 }
-//        case "−": operateDigit(operation){ $0 - $1 }
-//        case "×": operateDigit(operation){ $0 * $1 }
-//        case "÷": operateDigit(operation){ $0 / $1 }
-//        case "√": operateDigit(operation){sqrt($0)}
-//        case "sin": operateDigit(operation){sin($0)}
-//        case "cos": operateDigit(operation){cos($0)}
-//        case "π":  
-//            enter(M_PI)//如果是pi就直接压入
-//        default: break
-//        }
-        let operationresult = brain.pushOperation(operation)
-//         if let result =  brain.pushOperation(operation).0{
-//            displayValue = result
-//           
-//        }
-        if let result = operationresult.0{
-            if let num1 = operationresult.1, let num2 = operationresult.2{
-                appendhistory("\(num1) "+operation+" \(num2)")
-            }
-            else if let num1 = operationresult.1{
-                appendhistory(operation + "(\(num1))")
-            }
-            else {
-                appendhistory("\(result)")
-            }
-            displayValue = result
+        else{
+          display.text = String(format:"%.0f", value)
         }
         
+      }
+      
+      isTyping = false
     }
-//    func operateDigit(flag: String, operation: (Double,Double) -> Double){
-//        if(digitStack.count>=2){
-//            let num2 = digitStack.removeLast()
-//            let num1 = digitStack.removeLast()
-//            displayValue = operation(num1,num2)
-//            enter()
-//            appendhistory("\(num1) "+flag+" \(num2)")
-//        }
-//        
-//        
-//    }
-    
-    
-    @IBAction func clean() {
-        //恢复初始状态
-        //digitStack = []
-        display.text = "0"
-        history.text = "History"
-        brain.opStack = []
-    }
-//    private func operateDigit(flag: String,operation: (Double) -> Double){
-//        if(digitStack.count>=1){
-//            let num = digitStack.removeLast()
-//            displayValue = operation(num)
-//            enter()
-//            appendhistory(flag + "(\(num))")
-//        }
-//        
-//    }
-
-    func appendhistory(msg: String){
-        history.text = msg + " "
-    }
-    
-    @IBAction func appendDigit(sender: UIButton) {
+  }
+  func isFraction(input: Double) ->Bool{
+    return input - round(input) != 0
+  }
+  
+  @IBAction func turnNegativeorPositive() {
+    if let value = displayValue{
+      if isTyping{
         
-        var digit = sender.currentTitle!
-     
-        if digit == "." {
-            if display.text!.rangeOfString(".") != nil {
-                return
-            }
-//            else {
-//                digit = display.text! + "."
-//            }
+        displayValue = -value
+        //继续typing
+        isTyping = true
+      }
+      else {
+        //不是输入中 启用单目操作符模式
+        brain.pushOperation("ᐩ/-")
+        
+        if let result = brain.evaluate().0{
+          displayValue = result
           
-            
-        }
-            
-        
-        if isTyping {
-            display.text = display.text! + digit
-        }
-        else {
-            display.text = digit
-            
-            isTyping = true
+          
         }
         
+      }
     }
-    
-    @IBAction func enter() {
-        isTyping = false
-        //下一次是新的输入
-        //digitStack.append(displayValue)
-       if let  result =  brain.pushOperand(displayValue).0{
-            displayValue = result
-        }
-        
-        //print("digitStack = \(digitStack)")
-        //print("hello world")
-        
-        
-        
-    }
-    func enter(input: Double){
-        isTyping = false
-        //digitStack.append(input)
-        brain.pushOperand(input)
-        //print("digitStack = \(digitStack)")
-      
-    }
-    
-    var displayValue: Double{
-        get{
-            return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
-        }
-        set{
-            let result = String(format: "%.2f", newValue)
-            display.text = result
-            
-            isTyping = false
-        }
-    }
-    
+  }
 }
 
