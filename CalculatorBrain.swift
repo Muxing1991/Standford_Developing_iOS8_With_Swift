@@ -43,6 +43,7 @@ class CalculatorBrain{
         opsdic["sin"] = Op.Unaryoperation("sin", sin)
         opsdic["cos"] = Op.Unaryoperation("cos", cos)
         opsdic["π"] = Op.Operand(M_PI)
+        opsdic["ᐩ/-"] = Op.Unaryoperation("-",{-$0})
         
     }
     
