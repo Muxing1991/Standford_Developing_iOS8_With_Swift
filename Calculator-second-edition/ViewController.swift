@@ -19,20 +19,31 @@ class ViewController: UIViewController {
   
   var brain = CalculatorBrain()
   
+  //extra credit Undo
+  //如果是输入中 就删除  如果不是输入中 就撤销上一次操作
+  
+  
+ 
   
   @IBAction func deleteDigit() {
     
-    //删除display中显示的数字
-    let displayDigit = display.text!
-    let rest = displayDigit.characters.dropLast()
-    if rest.count == 0 {
-      display.text = "0"
-      return
+    if isTyping{
+      //删除display中显示的数字
+      let displayDigit = display.text!
+      let rest = displayDigit.characters.dropLast()
+      if rest.count == 0 {
+        display.text = "0"
+        isTyping = false
+        return
+      }
+      display.text = String(rest)
     }
-    display.text = String(rest)
-    if !isTyping{
-      //如果不是打字中 也要enter 否则按下操作符没有操作数
-      enter()
+    else {
+      //不是输入中 撤销上一次操作 
+      brain.undo()
+      history.text = "history"
+      displayValue = 0
+      
     }
     
   }
@@ -41,15 +52,18 @@ class ViewController: UIViewController {
     if isTyping{
       enter() //把现在显示在display的数字压入栈
     }
-    let operationresult = brain.pushOperation(operation)
+    //let operationresult = brain.pushOperation(operation)
+    brain.pushOperation(operation)
+    
     
     //有结果的情况下
-    if let result = operationresult{
-      displayValue = result
-    }
-    else{
-      displayValue = nil
-    }
+//    if let result = operationresult{
+//      displayValue = result
+//    }
+//    else{
+//      displayValue = nil
+//    }
+    display.text = brain.evaluateAndReportErrors()
     appendDescription()
     
   }
@@ -93,7 +107,8 @@ class ViewController: UIViewController {
   
   @IBAction func setVariableM() {
     brain.variableValue["M"] = displayValue
-    displayValue = brain.evaluate()
+    //displayValue = brain.evaluate()
+    display.text = brain.evaluateAndReportErrors()
   }
   
   
@@ -157,11 +172,11 @@ class ViewController: UIViewController {
         //不是输入中 启用单目操作符模式
         brain.pushOperation("ᐩ/-")
         
-        if let result = brain.evaluate(){
-          displayValue = result
+//        if let result = brain.evaluate(){
+//          displayValue = result
+        display.text = brain.evaluateAndReportErrors()
           
-          
-        }
+        //}
         
       }
     }

@@ -195,7 +195,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="34"/>
                                 <state key="normal" title="←"/>
                                 <connections>
-                                    <action selector="deleteDigit" destination="BYZ-38-t0r" eventType="touchUpInside" id="IDC-j7-5xB"/>
+                                    <action selector="deleteDigit" destination="BYZ-38-t0r" eventType="touchUpInside" id="Gqf-dk-NGp"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Gp-ra-ff8">
