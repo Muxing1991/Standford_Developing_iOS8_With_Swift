@@ -15,8 +15,6 @@ class ViewController: UIViewController {
   
   @IBOutlet weak var history: UILabel!
   
-  var state = true
-  
   var isTyping = false
   
   var brain = CalculatorBrain()
@@ -33,7 +31,7 @@ class ViewController: UIViewController {
     }
     display.text = String(rest)
     if !isTyping{
-      //如果不是打字中 也要enter
+      //如果不是打字中 也要enter 否则按下操作符没有操作数
       enter()
     }
     
@@ -45,18 +43,14 @@ class ViewController: UIViewController {
     }
     let operationresult = brain.pushOperation(operation)
     
-    if let result = operationresult.0{
-      if let num1 = operationresult.1, let num2 = operationresult.2{
-        appendhistory("\(num1) "+operation+" \(num2) = \(result)")
-      }
-      else if let num1 = operationresult.1{
-        appendhistory(operation + "(\(num1)) = \(result)")
-      }
-      else {
-        appendhistory("\(result)")
-      }
+    //有结果的情况下
+    if let result = operationresult{
       displayValue = result
     }
+    else{
+      displayValue = nil
+    }
+    appendDescription()
     
   }
   
@@ -65,32 +59,25 @@ class ViewController: UIViewController {
     //恢复初始状态
     display.text = "0"
     history.text = "History"
-    brain.opStack = []
+    
   }
   
-  func appendhistory(msg: String){
-    history.text = msg + " "
+  func appendDescription(){
+    history.text = brain.description
   }
   
   @IBAction func appendDigit(sender: UIButton) {
     
     let digit = sender.currentTitle!
     
-    if digit == "." {
-      if display.text!.rangeOfString(".") != nil {
+    if isTyping{
+      if digit == "." && display.text!.rangeOfString(".") != nil {
         return
       }
-      
-      
-    }
-    
-    
-    if isTyping {
       display.text = display.text! + digit
     }
     else {
       display.text = digit
-      
       isTyping = true
     }
     
@@ -100,53 +87,53 @@ class ViewController: UIViewController {
     isTyping = false
     //下一次是新的输入
     if let value = displayValue{
-      if let  result = brain.pushOperand(value).0{
+      if let  result = brain.pushOperand(value){
         displayValue = result
+       
       }
     }
     
     
     
     
-    
-    
-  }
-  func enter(input: Double){
-    isTyping = false
-    
-    brain.pushOperand(input)
     
     
   }
   
+  
+  
+  
+  
   var displayValue: Double?{
+    // optional chaining
     get{
-      //如果显示的是nan not a number 会报错
       
-      if display.text! == "nan" {
-        return nil
-      }
-      else {
-        return NSNumberFormatter().numberFromString(display.text!)!.doubleValue
-      }
+      return NSNumberFormatter().numberFromString(display.text!)?.doubleValue
+      //如果无法转换 将会返回nil 不会报错 这就是optional chaining  调用目标可能为空的属性 方法 下标
+      
     }
     set{
+//      display.text = newValue?.description ?? " "
+      
+      //当 newvalue为nil时 显示框为空 使用空合运算符 防止显示框缩小
       if let value = newValue{
-        //去除多余的小数
-        if isFraction(newValue!){
-          display.text = String(format:"%.2f", value)
-        }
-        else{
-          display.text = String(format:"%.0f", value)
-        }
-        
+        display.text = transFraction(value)
       }
+      //print(newValue?.description)
       
       isTyping = false
     }
+    
   }
-  func isFraction(input: Double) ->Bool{
-    return input - round(input) != 0
+
+  func transFraction(input: Double) -> String {
+    if input - round(input) != 0 {
+      //是小数
+      return String(format: "%.2f", input)
+    }
+    else{
+      return String(format: "%.0f", input)
+    }
   }
   
   @IBAction func turnNegativeorPositive() {
@@ -161,7 +148,7 @@ class ViewController: UIViewController {
         //不是输入中 启用单目操作符模式
         brain.pushOperation("ᐩ/-")
         
-        if let result = brain.evaluate().0{
+        if let result = brain.evaluate(){
           displayValue = result
           
           

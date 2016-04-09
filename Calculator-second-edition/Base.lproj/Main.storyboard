@@ -190,10 +190,6 @@
                                     <action selector="appendDigit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rKH-xK-6fP"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8RB-DY-Bal">
-                                <rect key="frame" x="359" y="499.5" width="102.5" height="92.5"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="34"/>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VKk-Su-alj">
                                 <rect key="frame" x="28" y="499.5" width="102.5" height="92.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="34"/>
@@ -205,6 +201,10 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4Gp-ra-ff8">
                                 <rect key="frame" x="469.5" y="499.5" width="102.5" height="92.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="34"/>
+                                <state key="normal" title="⇾M"/>
+                                <connections>
+                                    <action selector="initailVarVal" destination="BYZ-38-t0r" eventType="touchUpInside" id="LQP-SF-R5k"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wGd-2y-jjt">
                                 <rect key="frame" x="249" y="499.5" width="102" height="92.5"/>
@@ -221,6 +221,14 @@
                                 <state key="normal" title="ᐩ/-"/>
                                 <connections>
                                     <action selector="turnNegativeorPositive" destination="BYZ-38-t0r" eventType="touchUpInside" id="PfV-lH-Ssv"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8RB-DY-Bal">
+                                <rect key="frame" x="359" y="499" width="102.5" height="92.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="34"/>
+                                <state key="normal" title="M"/>
+                                <connections>
+                                    <action selector="initialVar:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xHB-G1-xkj"/>
                                 </connections>
                             </button>
                         </subviews>
