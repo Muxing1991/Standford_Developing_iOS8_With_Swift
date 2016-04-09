@@ -55,15 +55,10 @@ class ViewController: UIViewController {
   }
   
   
-  @IBAction func clean() {
-    //恢复初始状态
-    display.text = "0"
-    history.text = "History"
-    
-  }
+  
   
   func appendDescription(){
-    history.text = brain.description
+    history.text = brain.description + " = "
   }
   
   @IBAction func appendDigit(sender: UIButton) {
@@ -92,18 +87,29 @@ class ViewController: UIViewController {
        
       }
     }
-    
-    
-    
-    
-    
-    
   }
   
   
   
+  @IBAction func setVariableM() {
+    brain.variableValue["M"] = displayValue
+    displayValue = brain.evaluate()
+  }
   
   
+  @IBAction func clean() {
+    brain.cleanAllData()
+    history.text = "history"
+    displayValue = 0
+    
+  }
+  @IBAction func pushVariableM() {
+    if isTyping{
+      // 如果真在typing 把之前的数字压入
+      enter()
+    }
+    brain.pushOperand("M")
+  }
   var displayValue: Double?{
     // optional chaining
     get{
@@ -120,6 +126,9 @@ class ViewController: UIViewController {
         display.text = transFraction(value)
       }
       //print(newValue?.description)
+      else {
+        display.text = " "
+      }
       
       isTyping = false
     }

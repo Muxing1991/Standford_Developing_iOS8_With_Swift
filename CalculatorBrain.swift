@@ -46,7 +46,12 @@ class CalculatorBrain: CustomStringConvertible
   //创建一个变量的字典
   var variableValue = [String:Double]()
   
-  
+  func cleanAllData(){
+    OpStack = []
+    variableValue = [:]
+    
+    
+  }
   
   init(){
     //在初始化中 对字典进行初始化
@@ -83,12 +88,22 @@ class CalculatorBrain: CustomStringConvertible
   var description: String{
     //只读的 OpStack 描述
     get{
-      return descript(OpStack).msg
+      //递归显示所有的expressions
+      var des: (msg: String,rank: Int,remainingOps: [Op])
+      des = descript(OpStack)
+      var result = des.msg
+      var ops = des.remainingOps
+      while !ops.isEmpty{
+        des = descript(des.remainingOps)
+        ops = des.remainingOps
+        result = des.msg + "," + result
+      }
+      return result
     }
     
   }
   private func descript(opStack: [Op]) -> (msg: String,rank: Int, remainingOps: [Op]){
-    if !OpStack.isEmpty{
+    if !opStack.isEmpty{
       var myops = opStack
       
       let op = myops.removeLast()
@@ -144,8 +159,10 @@ class CalculatorBrain: CustomStringConvertible
       }
     }
     
-    return (" ", 0, opStack)
+    return (" ? ", 0, opStack)
   }
+  
+  
   
   //计算 递归
   private func evaluate(opStack:[Op]) -> (result: Double?,remainingOps: [Op]) {
@@ -168,7 +185,10 @@ class CalculatorBrain: CustomStringConvertible
           if let num1 = evaluateNextNext.result{
             return (operation(num1, num2), evaluateNextNext.remainingOps)
           }
+          return (nil, evaluateNextNext.remainingOps)
         }
+        return (nil, evaluateNext.remainingOps)
+        
       case .Constants( _, _, let value):
         return (value, myops)
       case .VariableValue(let symbol, _):
