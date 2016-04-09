@@ -203,7 +203,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="34"/>
                                 <state key="normal" title="⇾M"/>
                                 <connections>
-                                    <action selector="initailVarVal" destination="BYZ-38-t0r" eventType="touchUpInside" id="LQP-SF-R5k"/>
+                                    <action selector="setVariableM" destination="BYZ-38-t0r" eventType="touchUpInside" id="WhI-rY-zP9"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wGd-2y-jjt">
@@ -211,8 +211,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="34"/>
                                 <state key="normal" title="C"/>
                                 <connections>
-                                    <action selector="clean" destination="BYZ-38-t0r" eventType="touchUpInside" id="rd6-4H-MRA"/>
-                                    <action selector="enter" destination="BYZ-38-t0r" eventType="touchUpInside" id="IPc-vb-kk9"/>
+                                    <action selector="clean" destination="BYZ-38-t0r" eventType="touchUpInside" id="XVQ-ra-LxQ"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JHL-nr-Fx3">
@@ -228,7 +227,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="34"/>
                                 <state key="normal" title="M"/>
                                 <connections>
-                                    <action selector="initialVar:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xHB-G1-xkj"/>
+                                    <action selector="pushVariableM" destination="BYZ-38-t0r" eventType="touchUpInside" id="rc1-wg-lkV"/>
                                 </connections>
                             </button>
                         </subviews>
