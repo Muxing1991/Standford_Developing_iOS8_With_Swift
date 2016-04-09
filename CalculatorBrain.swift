@@ -7,96 +7,185 @@
 //
 
 import Foundation
-class CalculatorBrain{
-    //创建一个枚举 抽象操作数与操作符  枚举名、枚举值都首字母大写
-    //Swift的特性 可以把枚举中的枚举值与数据关联起来
-  enum Op: CustomStringConvertible
-    {
-        case Operand(Double)
-        case Unaryoperation(String, Double -> Double)
-        case Binaryoperation(String, (Double, Double) -> Double)
+class CalculatorBrain: CustomStringConvertible
+{
+  private enum Op: CustomStringConvertible
+  {
+    //制定算术符优先级
+    case Operand(Double, Int)
+    case BinaryOperation(String, Int, (Double, Double) -> Double)
+    case UnaryOperation(String, Int, Double -> Double)
+    case VariableValue(String, Int)
+    case Constants(String, Int, Double)
+    
+    
     var description: String{
       get{
         switch self {
-        case .Operand(let operand):
-          return "\(operand)"
-        case .Binaryoperation(let operation,_):
+        case .BinaryOperation(let operation , _, _):
           return operation
-        case .Unaryoperation(let operation,_):
+        case .Constants(let symbol , _, _):
+          return  symbol
+        case .Operand(let value):
+          return "\(value)"
+        case .UnaryOperation(let operation , _, _):
           return operation
+        case .VariableValue(let symbol, _):
+          return symbol
         }
       }
     }
-    }
-    //创建一个op数组 为了controler的清空 不private
-   var opStack = [Op]()
     
-   private var opsdic = [String:Op]()
     
-    init(){
-        //初始化操作字典
-        opsdic["√"] = Op.Unaryoperation("√", sqrt)
-        opsdic["+"] = Op.Binaryoperation("+", +)
-        opsdic["−"] = Op.Binaryoperation("−", {$0 - $1})
-        opsdic["×"] = Op.Binaryoperation("×", *)
-        opsdic["÷"] = Op.Binaryoperation("÷", {$0 / $1})
-        opsdic["sin"] = Op.Unaryoperation("sin", sin)
-        opsdic["cos"] = Op.Unaryoperation("cos", cos)
-        opsdic["π"] = Op.Operand(M_PI)
-        opsdic["ᐩ/-"] = Op.Unaryoperation("-",{-$0})
-        
+  }
+  
+  //创建一个Op数组 用来保存操作信息
+  private var OpStack = [Op]()
+  //创建一个操作符的字典
+  private var OpDic = [String:Op]()
+  //创建一个变量的字典
+  var variableValue = [String:Double]()
+  
+  
+  
+  init(){
+    //在初始化中 对字典进行初始化
+    OpDic["+"] = Op.BinaryOperation("+", 1, +)
+    OpDic["−"] = Op.BinaryOperation("−", 2, {$0 - $1})
+    OpDic["×"] = Op.BinaryOperation("×", 3, *)
+    OpDic["÷"] = Op.BinaryOperation("÷", 4, {$0 / $1})
+    OpDic["cos"] = Op.UnaryOperation("cos", 0, cos)
+    OpDic["sin"] = Op.UnaryOperation("sin", 0, sin)
+    OpDic["√"] = Op.UnaryOperation("√", 0, sqrt)
+    OpDic["π"] = Op.Constants("π", 0, M_PI)
+    
+  }
+  
+  //压进一个操作数
+  func pushOperand(operand: Double) -> Double?{
+    OpStack.append(Op.Operand(operand, 0))
+    return evaluate()
+  }
+  
+  func pushOperand(symbol: String) -> Double?{
+    OpStack.append(Op.VariableValue(symbol, 0))
+    return evaluate()
+  }
+  //压进一个操作符
+  func pushOperation(operation: String) -> Double?{
+    if let op = OpDic[operation]{
+      OpStack.append(op)
+      return evaluate()
+    }
+    return nil
+    
+  }
+  var description: String{
+    //只读的 OpStack 描述
+    get{
+      return descript(OpStack).msg
     }
     
-    //将操作数压入
-    func pushOperand(operand: Double) -> (Double?, Double?, Double?){
-        opStack.append(Op.Operand(operand))
-        return evaluate()
-    }
-    //将操作符压入
-    func pushOperation(operation: String) -> (Double?, Double?, Double?){
-        if let dicoperation = opsdic[operation]{
-            //能够在字典中找到的话 把对应的op压入
-            opStack.append(dicoperation)
-            return evaluate()
+  }
+  private func descript(opStack: [Op]) -> (msg: String,rank: Int, remainingOps: [Op]){
+    if !OpStack.isEmpty{
+      var myops = opStack
+      
+      let op = myops.removeLast()
+      switch op{
+      case .UnaryOperation(let operation,let rank, _):
+        let udescript = descript(myops)
+        return (operation + " ( " + udescript.msg + " ) ",rank, udescript.remainingOps)
+      case .Operand(let operand, let rank):
+        return ("\(operand)",rank, myops)
+      case .Constants(let symbol,let rank, _):
+        return (symbol, rank, myops)
+      case .VariableValue(let symbol, let rank ):
+        return (symbol, rank, myops)
+      case .BinaryOperation(let operation, let rank, _):
+        let descriptNext = descript(myops)
+        var num2 = descriptNext.msg
+        let rank2 = descriptNext.rank
+        let descriptNextNext = descript(descriptNext.remainingOps)
+        var num1 = descriptNextNext.msg
+        let rank1 = descriptNextNext.rank
+        //根据优先级 决定是否 添加括号
+        if rank == 1  {
+          //加
+          return (num1 + " " + operation + " " + num2 + " ", rank, descriptNextNext.remainingOps )
         }
-        return (nil, nil, nil)
-    }
-    //输入一个op数组 返回结果与剩下的op数组
-    private  func evaluate(ops: [Op]) ->(result: Double?, remainingOps: [Op],op1: Double?,op2: Double?){
-        if !ops.isEmpty{
-            var myops = ops
-            let op = myops.removeLast()
-            switch op {
-            case .Operand(let operand):
-                return (operand, myops, nil, nil)
-            case .Unaryoperation(_, let operation):
-                let evaluateone = evaluate(myops)
-                if let num1 = evaluateone.result{
-                    return (operation(num1),evaluateone.remainingOps,num1, nil)
-                }
-            case .Binaryoperation(_, let boperation):
-                let evaluateone = evaluate(myops)
-                if let num1 = evaluateone.result{
-                    let evaluatetwo = evaluate(evaluateone.remainingOps)
-                    if let num2 = evaluatetwo.result{
-                        return (boperation(num2, num1),evaluatetwo.remainingOps, num2, num1)
-                    }
-                    else{
-                      return (nil, evaluateone.remainingOps,nil,nil)
-                  }
-                }
-            }
+        else if rank == 2 {
+          // 减
+          if rank2 == 1 || rank2 == 2 {
+            return (num1 + " " + operation + "（ " + num2 + " ) ", rank, descriptNextNext.remainingOps )
+          }
+          else{
+            return (" "+num1 + " " + operation + " " + num2 + " ", rank, descriptNextNext.remainingOps )
+          }
         }
-        return (nil, [],nil, nil)
+        else if rank == 3 {
+          if rank1 == 1 || rank1 == 2 {
+            num1 = " ( " + num1 + " ) "
+          }
+          else if rank2 == 1 || rank2 == 2 {
+            num2 = " ( " + num2 + " ) "
+          }
+          return (num1 + operation + num2, rank, descriptNextNext.remainingOps )
+        }
+        else if rank == 4{
+          if rank1 == 1 || rank1 == 2 {
+            num1 = " ( " + num1 + " ) "
+          }
+          else if rank2 == 1 || rank2 == 2 || rank2 == 3{
+            num2 = " ( " + num2 + " ) "
+          }
+          return (num1 + operation + num2, rank, descriptNextNext.remainingOps )
+        }
+      }
     }
     
-    //重载
-    func evaluate() -> (Double?, Double?, Double?){
-        let (result, remainder ,op1, op2) = evaluate(opStack)
-        print("opStack = \(opStack) result = \(result) remainder = \(remainder)")
-        return (result, op1, op2)
+    return (" ", 0, opStack)
+  }
+  
+  //计算 递归
+  private func evaluate(opStack:[Op]) -> (result: Double?,remainingOps: [Op]) {
+    if !opStack.isEmpty{
+      var myops = opStack
+      print(OpStack)
+      let op = myops.removeLast()
+      switch op {
+      case .Operand(let value, _):
+        return (value, myops)
+      case .UnaryOperation(_, _, let operation):
+        let evaluateNext = evaluate(myops)
+        if let value = evaluateNext.result{
+          return (operation(value), evaluateNext.remainingOps)
+        }
+      case .BinaryOperation(_, _, let operation):
+        let evaluateNext = evaluate(myops)
+        if let num2 = evaluateNext.result{
+          let evaluateNextNext = evaluate(evaluateNext.remainingOps)
+          if let num1 = evaluateNextNext.result{
+            return (operation(num1, num2), evaluateNextNext.remainingOps)
+          }
+        }
+      case .Constants( _, _, let value):
+        return (value, myops)
+      case .VariableValue(let symbol, _):
+        if let value = variableValue[symbol]{
+          return (value, myops)
+        }
+        else {
+          return (nil, myops)
+        }
+      }
     }
-    
-        
-    
+    return (nil, opStack)
+  }
+  //重载
+  func evaluate() -> Double? {
+    return evaluate(OpStack).result
+  }
+  
 }
+
