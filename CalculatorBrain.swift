@@ -53,6 +53,26 @@ class CalculatorBrain: CustomStringConvertible
     
   }
   
+  var program: AnyObject { //guranteed to be a PropertyList
+    get{
+      return OpStack.map{ $0.description }
+    }
+    set{
+      if let values = newValue as? Array<String>{
+        for value in values {
+          //如果是操作符
+          var myops = [Op]()
+          if let operation = OpDic[value]{
+            myops.append(operation)
+          } else if let operand = NSNumberFormatter().numberFromString(value)?.doubleValue{
+            myops.append(.Operand(operand, 0))
+          }
+          
+        }
+      }
+    }
+  }
+  
   init(){
     //在初始化中 对字典进行初始化
     OpDic["+"] = Op.BinaryOperation("+", 1,{ return $0 == nil||$1 == nil ? "not enough operands" : nil} , +)
