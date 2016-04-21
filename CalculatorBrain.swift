@@ -13,24 +13,24 @@ class CalculatorBrain: CustomStringConvertible
   {
     //制定算术符优先级
     case Operand(Double, Int)
-    case BinaryOperation(String, Int, (Double, Double) -> Double)
-    case UnaryOperation(String, Int, Double -> Double)
-    case VariableValue(String, Int)
+    case BinaryOperation(String, Int, ((Double, Double) -> String?)?, (Double, Double) -> Double)
+    case UnaryOperation(String, Int, ((Double) -> String?)?, Double -> Double)
+    case VariableValue(String, Int, String?)
     case Constants(String, Int, Double)
     
     
     var description: String{
       get{
         switch self {
-        case .BinaryOperation(let operation , _, _):
+        case .BinaryOperation(let operation, _ , _, _):
           return operation
         case .Constants(let symbol , _, _):
           return  symbol
         case .Operand(let value):
           return "\(value)"
-        case .UnaryOperation(let operation , _, _):
+        case .UnaryOperation(let operation , _, _, _):
           return operation
-        case .VariableValue(let symbol, _):
+        case .VariableValue(let symbol, _, _):
           return symbol
         }
       }
@@ -53,15 +53,35 @@ class CalculatorBrain: CustomStringConvertible
     
   }
   
+  var program: AnyObject { //guranteed to be a PropertyList
+    get{
+      return OpStack.map{ $0.description }
+    }
+    set{
+      if let values = newValue as? Array<String>{
+        for value in values {
+          //如果是操作符
+          var myops = [Op]()
+          if let operation = OpDic[value]{
+            myops.append(operation)
+          } else if let operand = NSNumberFormatter().numberFromString(value)?.doubleValue{
+            myops.append(.Operand(operand, 0))
+          }
+          
+        }
+      }
+    }
+  }
+  
   init(){
     //在初始化中 对字典进行初始化
-    OpDic["+"] = Op.BinaryOperation("+", 1, +)
-    OpDic["−"] = Op.BinaryOperation("−", 2, {$0 - $1})
-    OpDic["×"] = Op.BinaryOperation("×", 3, *)
-    OpDic["÷"] = Op.BinaryOperation("÷", 4, {$0 / $1})
-    OpDic["cos"] = Op.UnaryOperation("cos", 0, cos)
-    OpDic["sin"] = Op.UnaryOperation("sin", 0, sin)
-    OpDic["√"] = Op.UnaryOperation("√", 0, sqrt)
+    OpDic["+"] = Op.BinaryOperation("+", 1,{ return $0 == nil||$1 == nil ? "not enough operands" : nil} , +)
+    OpDic["−"] = Op.BinaryOperation("−", 2, { return $0 == nil||$1 == nil ? "not enough operands" : nil}, {$0 - $1})
+    OpDic["×"] = Op.BinaryOperation("×", 3, { return $0 == nil||$1 == nil ? "not enough operands" : nil}, *)
+    OpDic["÷"] = Op.BinaryOperation("÷", 4, { return $1 == 0 ? "不能除以0" : nil},{$0 / $1})
+    OpDic["cos"] = Op.UnaryOperation("cos", 0,{ return $0 == nil ? "not enough operands" : nil}, cos)
+    OpDic["sin"] = Op.UnaryOperation("sin", 0,{ return $0 == nil ? "not enough operands" : nil}, sin)
+    OpDic["√"] = Op.UnaryOperation("√", 0, { return $0 < 0 ? "负数不能开根号" : nil}, sqrt)
     OpDic["π"] = Op.Constants("π", 0, M_PI)
     
   }
@@ -73,7 +93,7 @@ class CalculatorBrain: CustomStringConvertible
   }
   
   func pushOperand(symbol: String) -> Double?{
-    OpStack.append(Op.VariableValue(symbol, 0))
+    OpStack.append(Op.VariableValue(symbol, 0, nil))
     return evaluate()
   }
   //压进一个操作符
@@ -108,16 +128,16 @@ class CalculatorBrain: CustomStringConvertible
       
       let op = myops.removeLast()
       switch op{
-      case .UnaryOperation(let operation,let rank, _):
+      case .UnaryOperation(let operation, let rank, _, _):
         let udescript = descript(myops)
         return (operation + " ( " + udescript.msg + " ) ",rank, udescript.remainingOps)
       case .Operand(let operand, let rank):
         return ("\(operand)",rank, myops)
       case .Constants(let symbol,let rank, _):
         return (symbol, rank, myops)
-      case .VariableValue(let symbol, let rank ):
+      case .VariableValue(let symbol, let rank, _ ):
         return (symbol, rank, myops)
-      case .BinaryOperation(let operation, let rank, _):
+      case .BinaryOperation(let operation, let rank, _, _):
         let descriptNext = descript(myops)
         var num2 = descriptNext.msg
         let rank2 = descriptNext.rank
@@ -159,7 +179,7 @@ class CalculatorBrain: CustomStringConvertible
       }
     }
     
-    return (" ? ", 0, opStack)
+    return (" ", 0, opStack)
   }
   
   
@@ -173,12 +193,12 @@ class CalculatorBrain: CustomStringConvertible
       switch op {
       case .Operand(let value, _):
         return (value, myops)
-      case .UnaryOperation(_, _, let operation):
+      case .UnaryOperation(_, _, _, let operation):
         let evaluateNext = evaluate(myops)
         if let value = evaluateNext.result{
           return (operation(value), evaluateNext.remainingOps)
         }
-      case .BinaryOperation(_, _, let operation):
+      case .BinaryOperation(_, _, _, let operation):
         let evaluateNext = evaluate(myops)
         if let num2 = evaluateNext.result{
           let evaluateNextNext = evaluate(evaluateNext.remainingOps)
@@ -191,7 +211,7 @@ class CalculatorBrain: CustomStringConvertible
         
       case .Constants( _, _, let value):
         return (value, myops)
-      case .VariableValue(let symbol, _):
+      case .VariableValue(let symbol, _, _ ):
         if let value = variableValue[symbol]{
           return (value, myops)
         }
@@ -202,9 +222,59 @@ class CalculatorBrain: CustomStringConvertible
     }
     return (nil, opStack)
   }
+  func evaluateAndReportErrors() -> String{
+   let (result , errormsg , _) = evaluateAndReportErrors(OpStack)
+    return errormsg ?? (result == nil ? "?" : "\(result!)")
+  }
+  
+  private func evaluateAndReportErrors(opstack: [Op]) -> (Double?, String?, [Op]){
+    if !opstack.isEmpty{
+      var myops = opstack
+      print(OpStack)
+      let op = myops.removeLast()
+      switch op {
+      case .Operand(let value, _):
+        return (value, nil, myops)
+      case .UnaryOperation(_, _, let errorTest, let operation):
+        let evaluateNext = evaluate(myops)
+        if let value = evaluateNext.result{
+          return (operation(value), errorTest?(value), evaluateNext.remainingOps)
+        }
+      case .BinaryOperation(_, _, let errorTest, let operation):
+        let evaluateNext = evaluate(myops)
+        if let num2 = evaluateNext.result{
+          let evaluateNextNext = evaluate(evaluateNext.remainingOps)
+          if let num1 = evaluateNextNext.result{
+            return (operation(num1, num2),errorTest?(num1, num2), evaluateNextNext.remainingOps)
+          }
+          return (nil," num is missing", evaluateNextNext.remainingOps)
+        }
+        return (nil," num is missing", evaluateNext.remainingOps)
+        
+      case .Constants( _,_, let value):
+        return (value,nil, myops)
+      case .VariableValue(let symbol, _ , _ ):
+        if let value = variableValue[symbol]{
+          return (value, nil, myops)
+        }
+        else {
+          return (nil,"value is missing", myops)
+        }
+      }
+    }
+    return (nil, nil, opstack)
+  }
   //重载
   func evaluate() -> Double? {
     return evaluate(OpStack).result
+  }
+  
+  //添加一个undo api
+  func undo(){
+    let eva = evaluate(OpStack)
+    //执行完一次操作 抛弃结果 替换OpStack
+    OpStack = eva.remainingOps
+    print(OpStack)
   }
   
 }
