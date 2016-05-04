@@ -14,6 +14,7 @@ class GraphsViewController: UIViewController {
     didSet{
       graph.addGestureRecognizer(UIPinchGestureRecognizer(target: graph, action: "pinching:"))
       graph.addGestureRecognizer(UIPanGestureRecognizer(target: graph, action: "panning:"))
+      graph.addGestureRecognizer(UITapGestureRecognizer(target: graph, action: "doubleTapping:"))
     }
   }
   
