@@ -60,6 +60,13 @@ class Axes: UIView {
       recognizer.setTranslation(CGPointZero, inView: self)
     }
   }
+  func doubleTapping(recognizer: UITapGestureRecognizer){
+        if recognizer.state == .Ended{
+        axesCenter = recognizer.locationInView(self)
+        recognizer.accessibilityActivationPoint = CGPointZero
+      
+    }
+  }
   
   
 }
