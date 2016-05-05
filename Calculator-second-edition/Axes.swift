@@ -43,6 +43,8 @@ class Axes: UIView {
     //axesCenter = convertPoint(center, toView: superview)
     let axes = AxesDrawer(color: color, contentScaleFactor: scale)
     axes.drawAxesInRect(bounds, origin: axesCenter, pointsPerUnit: pointsPerUnit)
+    let myfirst = bezierPathforCurve()
+    myfirst.stroke()
   }
   func pinching(recognizer: UIPinchGestureRecognizer){
     if recognizer.state == .Changed{
@@ -69,6 +71,32 @@ class Axes: UIView {
       
     }
   }
+  func bezierPathforCurve() -> UIBezierPath{
+    let path = UIBezierPath()
+    path.lineWidth = 1
+    UIColor.blueColor().set()
+    let startx = CGFloat(0)
+    let endx = bounds.width
+    path.moveToPoint(CGPoint(x: startx, y: axesCenter.y))
+    var i = startx
+    while i <= endx {
+      let iy = sin(transViewX2Num(i))
+      path.addLineToPoint(CGPoint(x: i, y: transNumY2View(iy)))
+      i += 1
+    }
+    return path
+  }
+  //把X轴的point转化成数字
+  private func transViewX2Num(x: CGFloat) -> CGFloat{
+    return (x - axesCenter.x) / pointsPerUnit
+  }
+  //把计算出的数字转换成对应的点
+  private func transNumY2View(y: CGFloat) -> CGFloat{
+    return axesCenter.y - y * pointsPerUnit
+  }
+  
+    
+  
   
   
 }
