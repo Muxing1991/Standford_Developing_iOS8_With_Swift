@@ -7,6 +7,11 @@
 //
 
 import UIKit
+
+protocol GraphDataSource: class {
+  func myFunc(sender:UIView ,x: CGFloat) -> CGFloat?
+}
+
 @IBDesignable
 class Axes: UIView {
   
@@ -38,6 +43,8 @@ class Axes: UIView {
       setNeedsDisplay()
     }
   }
+  //protocol类型的变量 用来与Controller链接
+  weak var myFunc: GraphDataSource?
   
   override func drawRect(rect: CGRect) {
     //axesCenter = convertPoint(center, toView: superview)
@@ -72,6 +79,7 @@ class Axes: UIView {
     }
   }
   func bezierPathforCurve() -> UIBezierPath{
+    
     let path = UIBezierPath()
     path.lineWidth = 1
     UIColor.blueColor().set()
@@ -79,12 +87,22 @@ class Axes: UIView {
     let endx = bounds.width
     path.moveToPoint(CGPoint(x: startx, y: axesCenter.y))
     var i = startx
-    while i <= endx {
-      let iy = sin(transViewX2Num(i))
-      path.addLineToPoint(CGPoint(x: i, y: transNumY2View(iy)))
-      i += 1
+    if myFunc != nil{
+      while i <= endx {
+        
+        //let iy = sin(transViewX2Num(i))
+        let iy = myFunc!.myFunc(self, x: transViewX2Num(i))
+        if let y = iy{
+          path.addLineToPoint(CGPoint(x: i, y: transNumY2View(y)))
+          i += 1
+        }
+        else {
+          break
+        }
+      }
+
     }
-    return path
+       return path
   }
   //把X轴的point转化成数字
   private func transViewX2Num(x: CGFloat) -> CGFloat{
