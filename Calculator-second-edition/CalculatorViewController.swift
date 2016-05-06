@@ -23,16 +23,7 @@ class CalculatorViewController: UIViewController {
   //如果是输入中 就删除  如果不是输入中 就撤销上一次操作
   
   
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    var view: UIViewController = segue.destinationViewController
-    if let des = view as? UINavigationController{
-      let target = des.visibleViewController!
-      view = target
-    }
-    if let graphVC = view as? GraphsViewController{
-      graphVC.model = cos
-    }
-  }
+ 
   
   @IBAction func deleteDigit() {
     

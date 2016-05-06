@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GraphsViewController: UIViewController, GraphDataSource {
+class GraphsViewController: UIViewController {
   
   @IBOutlet weak var graph: Axes!{
     didSet{
@@ -17,24 +17,7 @@ class GraphsViewController: UIViewController, GraphDataSource {
       graph.addGestureRecognizer(UITapGestureRecognizer(target: graph, action: "doubleTapping:"))
     }
   }
-  var model: ((CGFloat) -> CGFloat?)?
   
-  
-    
-  
-  
-  func myFunc(sender: UIView, x: CGFloat) -> CGFloat? {
-    if let funcModel = model{
-      return funcModel(x)
-    }
-    return nil
-  }
-  
-  @IBOutlet weak var myGraph: Axes!{
-    didSet{
-      myGraph.myFunc = self
-    }
-  }
   
   
   
