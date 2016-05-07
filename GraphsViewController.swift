@@ -26,15 +26,24 @@ class GraphsViewController: UIViewController, GraphDataSource {
   
   
   func myFunc(sender: UIView, x: CGFloat) -> CGFloat? {
-    if let brainModel = model{
-      brain.program = brainModel as! Array<String>
+//    if let brainModel = model{
+//      brain.program = brainModel as! Array<String>
+//      brain.variableValue["M"] = Double(x)
+//      if let result = brain.evaluate(){
+//        return CGFloat(result)
+//      }
+//      return 0
+//    }
+//    return 0
+    if model != nil{
+      brain.program = model as! Array<String>
       brain.variableValue["M"] = Double(x)
       if let result = brain.evaluate(){
         return CGFloat(result)
       }
       return 0
     }
-    return 0
+    return nil
   }
   
   @IBOutlet weak var myGraph: Axes!{
