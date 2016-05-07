@@ -26,7 +26,7 @@ class CalculatorBrain: CustomStringConvertible
           return operation
         case .Constants(let symbol , _, _):
           return  symbol
-        case .Operand(let value):
+        case .Operand(let value,_):
           return "\(value)"
         case .UnaryOperation(let operation , _, _, _):
           return operation
@@ -59,16 +59,20 @@ class CalculatorBrain: CustomStringConvertible
     }
     set{
       if let values = newValue as? Array<String>{
+        var myops = [Op]()
         for value in values {
           //如果是操作符
-          var myops = [Op]()
+          
           if let operation = OpDic[value]{
             myops.append(operation)
           } else if let operand = NSNumberFormatter().numberFromString(value)?.doubleValue{
             myops.append(.Operand(operand, 0))
           }
-          
+          else if value == "M"{
+            myops.append(.VariableValue("M", 0, nil))
+          }
         }
+        OpStack = myops
       }
     }
   }
@@ -247,9 +251,9 @@ class CalculatorBrain: CustomStringConvertible
           if let num1 = evaluateNextNext.result{
             return (operation(num1, num2),errorTest?(num1, num2), evaluateNextNext.remainingOps)
           }
-          return (nil," num is missing", evaluateNextNext.remainingOps)
+          return (nil," ? ", evaluateNextNext.remainingOps)
         }
-        return (nil," num is missing", evaluateNext.remainingOps)
+        return (nil," ? ", evaluateNext.remainingOps)
         
       case .Constants( _,_, let value):
         return (value,nil, myops)

@@ -30,7 +30,7 @@ class CalculatorViewController: UIViewController {
       view = target
     }
     if let graphVC = view as? GraphsViewController{
-      graphVC.model = cos
+      graphVC.model = brain.program
     }
   }
   

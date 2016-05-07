@@ -17,17 +17,24 @@ class GraphsViewController: UIViewController, GraphDataSource {
       graph.addGestureRecognizer(UITapGestureRecognizer(target: graph, action: "doubleTapping:"))
     }
   }
-  var model: ((CGFloat) -> CGFloat?)?
+  //var model: ((CGFloat) -> CGFloat?)?
+  //修改model 改为Brain的program
   
+  var model: AnyObject?
   
-    
+  private var brain = CalculatorBrain()
   
   
   func myFunc(sender: UIView, x: CGFloat) -> CGFloat? {
-    if let funcModel = model{
-      return funcModel(x)
+    if let brainModel = model{
+      brain.program = brainModel as! Array<String>
+      brain.variableValue["M"] = Double(x)
+      if let result = brain.evaluate(){
+        return CGFloat(result)
+      }
+      return 0
     }
-    return nil
+    return 0
   }
   
   @IBOutlet weak var myGraph: Axes!{
