@@ -57,7 +57,7 @@ class GraphsViewController: UIViewController, GraphDataSource {
     let disArray = discription.componentsSeparatedByString(",")
     for var str in disArray.reverse(){
       if str.containsString("M"){
-//        str.stringByReplacingOccurrencesOfString("M", withString: "𝓧")
+       
         str.replaceRange(str.rangeOfString("M")!, with: "x")
         return   "Expression: y = " + str
       }
