@@ -192,7 +192,7 @@ class CalculatorBrain: CustomStringConvertible
   private func evaluate(opStack:[Op]) -> (result: Double?,remainingOps: [Op]) {
     if !opStack.isEmpty{
       var myops = opStack
-      print(OpStack)
+      //print(OpStack)
       let op = myops.removeLast()
       switch op {
       case .Operand(let value, _):
@@ -200,6 +200,9 @@ class CalculatorBrain: CustomStringConvertible
       case .UnaryOperation(_, _, _, let operation):
         let evaluateNext = evaluate(myops)
         if let value = evaluateNext.result{
+          if operation(value).isNaN {
+            return (nil,evaluateNext.remainingOps)
+          }          
           return (operation(value), evaluateNext.remainingOps)
         }
       case .BinaryOperation(_, _, _, let operation):

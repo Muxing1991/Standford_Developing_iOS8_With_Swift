@@ -1,24 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="PS4-06-nw4">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15E65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="dtc-6I-kWQ">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Split View Controller-->
-        <scene sceneID="BXR-R1-x2W">
-            <objects>
-                <splitViewController id="PS4-06-nw4" sceneMemberID="viewController">
-                    <connections>
-                        <segue destination="dtc-6I-kWQ" kind="relationship" relationship="masterViewController" id="98X-fi-Wao"/>
-                        <segue destination="LMi-dY-L2p" kind="relationship" relationship="detailViewController" id="v5M-12-eJm"/>
-                    </connections>
-                </splitViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="oXu-89-2qL" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-566" y="60"/>
-        </scene>
         <!--Calculator View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -361,7 +348,7 @@
                     <navigationItem key="navigationItem" id="rDv-cX-3pL">
                         <barButtonItem key="rightBarButtonItem" title="graph" id="Gps-uP-AXD">
                             <connections>
-                                <segue destination="LMi-dY-L2p" kind="showDetail" id="Kzg-ik-Dmt"/>
+                                <segue destination="a6Y-WB-fII" kind="show" id="qqX-Vh-yV3"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -406,7 +393,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ue3-ec-Bao" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1058" y="538"/>
+            <point key="canvasLocation" x="1051" y="362"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="nra-TS-hcv">
@@ -426,26 +413,5 @@
             </objects>
             <point key="canvasLocation" x="246" y="-410"/>
         </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="0pU-Jr-6lM">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="LMi-dY-L2p" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wXU-Mh-msR">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="a6Y-WB-fII" kind="relationship" relationship="rootViewController" id="L27-UX-rV5"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="UeX-Lh-I9e" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="384" y="552"/>
-        </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="Kzg-ik-Dmt"/>
-    </inferredMetricsTieBreakers>
 </document>

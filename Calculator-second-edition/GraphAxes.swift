@@ -58,7 +58,9 @@ class GraphAxes: Axes {
           i += 1
         }
         else {
-          break
+          i += 1
+          path.moveToPoint(CGPoint(x: CGFloat(i), y: axesCenter.y))
+          continue
         }
       }
     }

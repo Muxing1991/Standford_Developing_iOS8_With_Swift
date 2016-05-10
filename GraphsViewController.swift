@@ -47,7 +47,7 @@ class GraphsViewController: UIViewController, GraphDataSource {
       if let result = brain.evaluate(){
         return CGFloat(result)
       }
-      return 0
+      return nil
     }
     return nil
   }
@@ -55,14 +55,20 @@ class GraphsViewController: UIViewController, GraphDataSource {
     //此时brain还是一个空的brain 问题在这里
     let discription = brain.description
     let disArray = discription.componentsSeparatedByString(",")
-    for var str in disArray.reverse(){
-      if str.containsString("M"){
-       
-        str.replaceRange(str.rangeOfString("M")!, with: "x")
-        return   "Expression: y = " + str
-      }
+//    for var str in disArray.reverse(){
+//      if str.containsString("M"){
+//       
+//        //str.replaceRange(str.rangeOfString("M")!, with: "x")
+//       str = str.stringByReplacingOccurrencesOfString("M", withString: "x")
+//        return   "Expression: y = " + str
+//      }
+//    }
+    var str = disArray.reverse()[0]
+    if str.containsString("M"){
+      str = str.stringByReplacingOccurrencesOfString("M", withString: "x")
     }
-    return nil
+    return "Expression: y = " + str
+    
   }
   
     
