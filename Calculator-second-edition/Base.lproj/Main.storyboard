@@ -386,7 +386,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="fe7-Q8-3Pe" customClass="Axes" customModule="Calculator_second_edition" customModuleProvider="target">
+                            <view contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="fe7-Q8-3Pe" customClass="GraphAxes" customModule="Calculator_second_edition" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
@@ -402,7 +402,6 @@
                     <navigationItem key="navigationItem" id="Xns-E0-Zuw"/>
                     <connections>
                         <outlet property="graph" destination="fe7-Q8-3Pe" id="gTo-nh-ZaE"/>
-                        <outlet property="myGraph" destination="fe7-Q8-3Pe" id="GJi-oW-aB3"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ue3-ec-Bao" userLabel="First Responder" sceneMemberID="firstResponder"/>
