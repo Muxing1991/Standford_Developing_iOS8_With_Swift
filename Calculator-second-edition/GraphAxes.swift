@@ -51,7 +51,6 @@ class GraphAxes: Axes {
     var i = startx
     if myFunc != nil{
       while i <= endx {
-        //let iy = sin(transViewX2Num(i))
         let iy = myFunc!.myFunc(self, x: transViewX2Num(i))
         if let y = iy{
           path.addLineToPoint(CGPoint(x: i, y: transNumY2View(y)))

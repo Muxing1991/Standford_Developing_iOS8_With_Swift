@@ -19,6 +19,7 @@
 		447B15621CD996FD0009FA6B /* Axes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447B15611CD996FD0009FA6B /* Axes.swift */; };
 		447CEE271CB0AC95001D314B /* CalculatorBrain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 447CEE261CB0AC95001D314B /* CalculatorBrain.swift */; };
 		4489891B1CE0A53F007C9C89 /* GraphAxes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4489891A1CE0A53F007C9C89 /* GraphAxes.swift */; };
+		44A8AE9E1CE36FBD00F140A6 /* StateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A8AE9D1CE36FBD00F140A6 /* StateViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		447B15611CD996FD0009FA6B /* Axes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Axes.swift; sourceTree = "<group>"; };
 		447CEE261CB0AC95001D314B /* CalculatorBrain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CalculatorBrain.swift; path = ../CalculatorBrain.swift; sourceTree = "<group>"; };
 		4489891A1CE0A53F007C9C89 /* GraphAxes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GraphAxes.swift; sourceTree = "<group>"; };
+		44A8AE9D1CE36FBD00F140A6 /* StateViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 				441B07801CAD422700027771 /* AppDelegate.swift */,
 				441B07821CAD422700027771 /* CalculatorViewController.swift */,
 				441B07841CAD422700027771 /* Main.storyboard */,
+				44A8AE9D1CE36FBD00F140A6 /* StateViewController.swift */,
 				447B15611CD996FD0009FA6B /* Axes.swift */,
 				4489891A1CE0A53F007C9C89 /* GraphAxes.swift */,
 				441B07871CAD422700027771 /* Assets.xcassets */,
@@ -277,6 +280,7 @@
 				447B155E1CD993A70009FA6B /* GraphsViewController.swift in Sources */,
 				447B15621CD996FD0009FA6B /* Axes.swift in Sources */,
 				447B15601CD993FB0009FA6B /* AxesDrawer.swift in Sources */,
+				44A8AE9E1CE36FBD00F140A6 /* StateViewController.swift in Sources */,
 				441B07831CAD422700027771 /* CalculatorViewController.swift in Sources */,
 				441B07811CAD422700027771 /* AppDelegate.swift in Sources */,
 				4489891B1CE0A53F007C9C89 /* GraphAxes.swift in Sources */,
