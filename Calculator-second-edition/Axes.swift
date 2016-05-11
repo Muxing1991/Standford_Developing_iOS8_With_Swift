@@ -14,11 +14,12 @@ import UIKit
 class Axes: UIView {
   
   
-  var axesCenter = CGPoint(x: 0, y: 0) {
+  var axesCenter = CGPoint() {
     didSet{
       setNeedsDisplay()
     }
   }
+  //UIView 的bounds属性 重写 增加观察器 用于设置中心点
   override var bounds: CGRect{
     didSet{
       let x = bounds.width / 2

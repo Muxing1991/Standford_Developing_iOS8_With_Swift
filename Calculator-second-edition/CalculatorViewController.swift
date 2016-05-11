@@ -13,7 +13,13 @@ class CalculatorViewController: UIViewController {
   
   @IBOutlet weak var display: UILabel!
   
-  @IBOutlet weak var history: UILabel!
+  @IBOutlet weak var history: UILabel!{
+    didSet{
+      history.lineBreakMode = NSLineBreakMode.ByTruncatingHead
+    }
+  }
+  
+  
   
   var isTyping = false
   

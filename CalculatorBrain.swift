@@ -169,7 +169,7 @@ class CalculatorBrain: CustomStringConvertible
           else if rank2 == 1 || rank2 == 2 {
             num2 = " ( " + num2 + " ) "
           }
-          return (num1 + operation + num2, rank, descriptNextNext.remainingOps )
+          return (num1 + " " + operation + " " + num2 + " ", rank, descriptNextNext.remainingOps )
         }
         else if rank == 4{
           if rank1 == 1 || rank1 == 2 {
@@ -178,7 +178,7 @@ class CalculatorBrain: CustomStringConvertible
           else if rank2 == 1 || rank2 == 2 || rank2 == 3{
             num2 = " ( " + num2 + " ) "
           }
-          return (num1 + operation + num2, rank, descriptNextNext.remainingOps )
+          return (num1 + " " + operation + " " + num2 + " ", rank, descriptNextNext.remainingOps )
         }
       }
     }
