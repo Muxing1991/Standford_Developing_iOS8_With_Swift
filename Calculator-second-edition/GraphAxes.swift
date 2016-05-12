@@ -49,6 +49,7 @@ class GraphAxes: Axes {
     let endx = bounds.width
     path.moveToPoint(CGPoint(x: startx, y: axesCenter.y))
     var i = startx
+//codehub还能编辑？
     if myFunc != nil{
       while i <= endx {
         let iy = myFunc!.myFunc(self, x: transViewX2Num(i))
