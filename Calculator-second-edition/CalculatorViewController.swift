@@ -16,6 +16,7 @@ class CalculatorViewController: UIViewController {
   @IBOutlet weak var history: UILabel!{
     didSet{
       history.lineBreakMode = NSLineBreakMode.ByTruncatingHead
+      print(history.text)
     }
   }
   
